@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  backend:
+    build: ./backend
+      #args:
+        #arg1: 10
+    ports:
+      - '80:80'
+    volumes:
+      - logs:/app/logs
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      MONGODB_PASSWORD: singh
+    depends_on:
+      - mongodbcontainer
+    container_name: goals-be
+
+  frontend:
+    build: ./frontend
+
+    ports:
+      - '3000:3000'
+
+    volumes:
+      - ./frontend/src:/app/src
+
+    depends_on:
+      - backend
+      
+    container_name: goals-fe
+  mongodbcontainer:
+    image: 'mongo'
+    volumes:
+      - data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ishit
+      MONGO_INITDB_ROOT_PASSWORD: singh
+    container_name: mongodb
+volumes:
+  data:
+  logs:
